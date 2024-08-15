@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\APIs\AuthController;
+use App\Http\Controllers\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,12 @@ Route::post('/register', [AuthController::class, 'registerUser']);
 
 // Login User
 Route::post('/login', [AuthController::class, 'loginUser']);
+
+// Add Products
+Route::post('/add-product', [ProductsController::class, 'store']);
+
+// Get Single Product
+Route::get('/products/{name}', [ProductsController::class, 'show']);
+
+// Get All Products
+Route::get('/products', [ProductsController::class, 'index']);

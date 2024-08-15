@@ -51,11 +51,17 @@ class helper {
     public static function profileFileUploadPath(){
         return storage_path('app/public/profilepic/');
     }
+    public static function productFileUploadPath(){
+        return storage_path('app/public/productpic/');
+    }
     /* For Store Path End */
 
     /* For Display Image */
     public static function displayProfilePath(){
         return URL::to('/').'/storage/profilepic/';
+    }
+    public static function displayProductPath(){
+        return URL::to('/').'/storage/productpic/';
     }
 
     public static function getRoleArray(){
