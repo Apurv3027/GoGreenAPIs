@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\APIs\AuthController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\BannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,11 @@ Route::get('/products/{name}', [ProductsController::class, 'show']);
 
 // Get All Products
 Route::get('/products', [ProductsController::class, 'index']);
+
+
+// Banners
+Route::post('/upload-banner-image', [BannerController::class, 'uploadImage']);  // Upload Banner Image
+Route::post('/add-banner', [BannerController::class, 'store']); // Add Banner
+Route::get('/banners', [BannerController::class, 'getAllBanners']); // Get All Banners
+Route::post('/banners/{id}', [BannerController::class, 'update']);   // Update Banner
+Route::delete('/banners/{id}', [BannerController::class, 'destroy']); // Delete Banner
