@@ -34,10 +34,21 @@ class BannerController extends Controller
     {
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $path = $image->store('public/banners');
-            $url = Storage::url($path);
-            return response()->json(['banner_image_url' => $url], 200);
+
+            // Store the image in the 'public/banners' directory
+            $path = $image->store('banners', 'public');
+
+
+            // App URL
+            $appurl = "https://tortoise-new-emu.ngrok-free.app";
+
+            // Generate a full URL to the image
+            $url = $appurl . Storage::url($path);
+
+            // Return the full URL so it can be accessed via the API
+            return response()->json(['banner_image_url' => url($url)], 200);
         }
+
         return response()->json(['error' => 'Image upload failed'], 400);
     }
 
@@ -104,7 +115,8 @@ class BannerController extends Controller
         $validator = Validator::make($request->all(), [
             'banner_name' => 'sometimes|string|max:255',
             'banner_description' => 'sometimes|string',
-            'banner_image_url' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'banner_image_url' => 'sometimes|string',
+            // 'banner_image_url' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -127,14 +139,27 @@ class BannerController extends Controller
         }
 
         // Handle file upload if a new image is provided
-        if ($request->hasFile('banner_image_url')) {
-            // Store the new file
-            $file = $request->file('banner_image_url');
-            $path = $file->store('banners', 'public'); // Store in 'public/banners'
-
-            // Update banner image URL
-            $banner->banner_image_url = $path;
+        if ($request->has('banner_image_url')) {
+            $banner->banner_image_url = $request->input('banner_image_url');
         }
+
+        // if ($request->hasFile('banner_image_url')) {
+        //     // Store the new file
+        //     $file = $request->file('banner_image_url');
+
+        //     // Store the image in the 'public/banners' directory
+        //     $path = $file->store('banners', 'public');
+
+
+        //     // App URL
+        //     $appurl = "https://tortoise-new-emu.ngrok-free.app";
+
+        //     // Generate a full URL to the image
+        //     $url = $appurl . Storage::url($path);
+
+        //     // Update banner image URL
+        //     $banner->banner_image_url = $url;
+        // }
 
         $banner->save();
 
