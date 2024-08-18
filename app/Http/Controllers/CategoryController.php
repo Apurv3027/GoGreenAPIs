@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Banner;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Session;
@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class BannerController extends Controller
+class CategoryController extends Controller
 {
-    public function getAllBanners()
+    public function getAllCategories()
     {
         // Fetch all banners from the database
-        $banners = Banner::all();
+        $categories = Category::all();
 
         return response()->json(
             [
                 'status' => 'success',
-                'banners' => $banners,
+                'categories' => $categories,
             ],
             200,
         );
@@ -35,8 +35,8 @@ class BannerController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
 
-            // Store the image in the 'public/banners' directory
-            $path = $image->store('banners', 'public');
+            // Store the image in the 'public/categories' directory
+            $path = $image->store('categories', 'public');
 
 
             // App URL
@@ -46,7 +46,7 @@ class BannerController extends Controller
             $url = $appurl . Storage::url($path);
 
             // Return the full URL so it can be accessed via the API
-            return response()->json(['banner_image_url' => url($url)], 200);
+            return response()->json(['category_image_url' => url($url)], 200);
         }
 
         return response()->json(['error' => 'Image upload failed'], 400);
@@ -73,20 +73,19 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        $banner = new Banner();
-        $banner->banner_name = $request->banner_name;
-        $banner->banner_description = $request->banner_description;
-        $banner->banner_image_url = $request->banner_image_url;
+        $category = new Category();
+        $category->category_name = $request->category_name;
+        $category->category_image_url = $request->category_image_url;
 
-        $banner->save();
+        $category->save();
 
-        return response()->json(['message' => 'Banner created successfully'], 200);
+        return response()->json(['message' => 'Category created successfully'], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Banner $banner)
+    public function show(Category $category)
     {
         //
     }
@@ -94,7 +93,7 @@ class BannerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Banner $banner)
+    public function edit(Category $category)
     {
         //
     }
@@ -104,19 +103,17 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Find the banner by ID
-        $banner = Banner::find($id);
+        // Find the category by ID
+        $category = Category::find($id);
 
-        if (!$banner) {
-            return response()->json(['message' => 'Banner not found'], 404);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
 
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'banner_name' => 'sometimes|string|max:255',
-            'banner_description' => 'sometimes|string',
-            'banner_image_url' => 'sometimes|string',
-            // 'banner_image_url' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'category_name' => 'sometimes|string|max:255',
+            'category_image_url' => 'sometimes|string',
         ]);
 
         if ($validator->fails()) {
@@ -130,24 +127,20 @@ class BannerController extends Controller
         }
 
         // Update fields if provided
-        if ($request->has('banner_name')) {
-            $banner->banner_name = $request->input('banner_name');
-        }
-
-        if ($request->has('banner_description')) {
-            $banner->banner_description = $request->input('banner_description');
+        if ($request->has('category_name')) {
+            $category->category_name = $request->input('category_name');
         }
 
         // Handle file upload if a new image is provided
-        if ($request->has('banner_image_url')) {
-            $banner->banner_image_url = $request->input('banner_image_url');
+        if ($request->has('category_image_url')) {
+            $category->category_image_url = $request->input('category_image_url');
         }
 
-        $banner->save();
+        $category->save();
 
         return response()->json([
-            'message' => 'Banner updated successfully',
-            'banner' => $banner,
+            'message' => 'Category updated successfully',
+            'category' => $category,
         ]);
     }
 
@@ -157,15 +150,15 @@ class BannerController extends Controller
     public function destroy($id)
     {
         // Find the banner by ID
-        $banner = Banner::find($id);
+        $category = Category::find($id);
 
-        if (!$banner) {
-            return response()->json(['message' => 'Banner not found'], 404);
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
 
-        // Delete the banner
-        $banner->delete();
+        // Delete the category
+        $category->delete();
 
-        return response()->json(['message' => 'Banner deleted successfully']);
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }

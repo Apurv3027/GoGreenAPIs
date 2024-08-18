@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIs\AuthController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,10 @@ Route::post('/add-banner', [BannerController::class, 'store']); // Add Banner
 Route::get('/banners', [BannerController::class, 'getAllBanners']); // Get All Banners
 Route::post('/banners/{id}', [BannerController::class, 'update']);   // Update Banner
 Route::delete('/banners/{id}', [BannerController::class, 'destroy']); // Delete Banner
+
+// Category
+Route::post('/upload-category-image', [CategoryController::class, 'uploadImage']);  // Upload Category Image
+Route::post('/add-category', [CategoryController::class, 'store']); // Add Category
+Route::get('/categories', [CategoryController::class, 'getAllCategories']); // Get All Category
+Route::post('/categories/{id}', [CategoryController::class, 'update']);   // Update Category
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']); // Delete Category
