@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helper\helper;
 
-class Category extends Model
+class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'products';
 
     protected $fillable = [
-        'category_name',
-        'category_image_url',
-        'category_item_count',
+        'product_name',
+        'product_price',
+        'product_image_url',
+        'product_description',
+        'product_category',
     ];
 }

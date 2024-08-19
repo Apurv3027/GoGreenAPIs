@@ -7,6 +7,7 @@ use App\Http\Controllers\APIs\AuthController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,16 +30,6 @@ Route::post('/register', [AuthController::class, 'registerUser']);
 // Login User
 Route::post('/login', [AuthController::class, 'loginUser']);
 
-// Add Products
-Route::post('/add-product', [ProductsController::class, 'store']);
-
-// Get Single Product
-Route::get('/products/{name}', [ProductsController::class, 'show']);
-
-// Get All Products
-Route::get('/products', [ProductsController::class, 'index']);
-
-
 // Banners
 Route::post('/upload-banner-image', [BannerController::class, 'uploadImage']);  // Upload Banner Image
 Route::post('/add-banner', [BannerController::class, 'store']); // Add Banner
@@ -52,3 +43,10 @@ Route::post('/add-category', [CategoryController::class, 'store']); // Add Categ
 Route::get('/categories', [CategoryController::class, 'getAllCategories']); // Get All Category
 Route::post('/categories/{id}', [CategoryController::class, 'update']);   // Update Category
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']); // Delete Category
+
+// Product
+Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);  // Upload Product Image
+Route::post('/add-product', [ProductController::class, 'store']); // Add Product
+Route::get('/products', [ProductController::class, 'getAllProducts']); // Get All Product
+Route::post('/products/{id}', [ProductController::class, 'update']);   // Update Product
+Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Delete Product

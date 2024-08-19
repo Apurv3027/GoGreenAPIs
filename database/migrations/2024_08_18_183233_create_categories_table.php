@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('category_name');
             $table->string('category_image_url');
+            $table->string('category_item_count');
             $table->timestamps();
         });
     }

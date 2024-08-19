@@ -38,9 +38,8 @@ class CategoryController extends Controller
             // Store the image in the 'public/categories' directory
             $path = $image->store('categories', 'public');
 
-
             // App URL
-            $appurl = "https://tortoise-new-emu.ngrok-free.app";
+            $appurl = 'https://tortoise-new-emu.ngrok-free.app';
 
             // Generate a full URL to the image
             $url = $appurl . Storage::url($path);
@@ -76,6 +75,7 @@ class CategoryController extends Controller
         $category = new Category();
         $category->category_name = $request->category_name;
         $category->category_image_url = $request->category_image_url;
+        $category->category_item_count = 0;
 
         $category->save();
 
@@ -114,6 +114,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'category_name' => 'sometimes|string|max:255',
             'category_image_url' => 'sometimes|string',
+            'category_item_count' => 'sometimes|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -136,6 +137,11 @@ class CategoryController extends Controller
             $category->category_image_url = $request->input('category_image_url');
         }
 
+        // Handle field if provided
+        if ($request->has('category_item_count')) {
+            $category->category_item_count = 0;
+        }
+
         $category->save();
 
         return response()->json([
@@ -149,7 +155,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        // Find the banner by ID
+        // Find the category by ID
         $category = Category::find($id);
 
         if (!$category) {
