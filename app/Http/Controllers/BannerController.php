@@ -52,7 +52,7 @@ class BannerController extends Controller
         return response()->json(['error' => 'Image upload failed'], 400);
     }
 
-    /**
+    /**d
      * Display a listing of the resource.
      */
     public function index()
