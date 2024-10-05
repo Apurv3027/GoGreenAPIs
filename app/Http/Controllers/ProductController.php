@@ -31,6 +31,30 @@ class ProductController extends Controller
         );
     }
 
+    public function getProductById($id)
+    {
+        // Find the product by ID, or return a 404 response if not found
+        $product = Product::find($id);
+
+        if ($product) {
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'product' => $product,
+                ],
+                200,
+            );
+        } else {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Product not found',
+                ],
+                404,
+            );
+        }
+    }
+
     public function uploadImage(Request $request)
     {
         if ($request->hasFile('image')) {
@@ -93,10 +117,13 @@ class ProductController extends Controller
 
             $product->save();
 
-            return response()->json([
-                'message' => 'Product created successfully',
-                'product' => $product,
-            ], 200);
+            return response()->json(
+                [
+                    'message' => 'Product created successfully',
+                    'product' => $product,
+                ],
+                200,
+            );
         } else {
             return response()->json(['error' => 'Category does not exist'], 400);
         }

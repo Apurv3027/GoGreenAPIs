@@ -50,3 +50,4 @@ Route::post('/add-product', [ProductController::class, 'store']); // Add Product
 Route::get('/products', [ProductController::class, 'getAllProducts']); // Get All Product
 Route::post('/products/{id}', [ProductController::class, 'update']);   // Update Product
 Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Delete Product
+Route::get('/products/{id}', [ProductController::class, 'getProductById']);
