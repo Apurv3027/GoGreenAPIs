@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +53,13 @@ Route::get('/products', [ProductController::class, 'getAllProducts']); // Get Al
 Route::post('/products/{id}', [ProductController::class, 'update']);   // Update Product
 Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Delete Product
 Route::get('/products/{id}', [ProductController::class, 'getProductById']);
+
+
+// Users
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
+
+// Add to Cart
+Route::post('/cart/add', [CartController::class, 'addToCart']);
+Route::get('/cart/{user_id}', [CartController::class, 'fetchCartByUserId']);
+Route::delete('/cart', [CartController::class, 'deleteFromCart']);
