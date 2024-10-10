@@ -23,10 +23,12 @@ class UserController extends Controller
     {
         // Fetch all users from the database
         $users = User::where('email', '!=', 'admin@gmail.com')->get();
+        $totalUsers = $users->count();
 
         return response()->json(
             [
                 'status' => 'success',
+                'totalUsers' => $totalUsers,
                 'users' => $users,
             ],
             200,

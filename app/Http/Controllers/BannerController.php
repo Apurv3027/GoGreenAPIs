@@ -20,10 +20,12 @@ class BannerController extends Controller
     {
         // Fetch all banners from the database
         $banners = Banner::all();
+        $totalBanners = $banners->count();
 
         return response()->json(
             [
                 'status' => 'success',
+                'totalBanners' => $totalBanners,
                 'banners' => $banners,
             ],
             200,

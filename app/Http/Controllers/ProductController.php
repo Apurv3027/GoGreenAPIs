@@ -21,10 +21,12 @@ class ProductController extends Controller
     {
         // Fetch all banners from the database
         $products = Product::all();
+        $totalProducts = $products->count();
 
         return response()->json(
             [
                 'status' => 'success',
+                'totalProducts' => $totalProducts,
                 'products' => $products,
             ],
             200,
@@ -116,6 +118,10 @@ class ProductController extends Controller
             $product->product_category = $category->category_name;
 
             $product->save();
+
+            // Increment the category's item count
+            $category->category_item_count = $category->category_item_count + 1;
+            $category->save();
 
             return response()->json(
                 [

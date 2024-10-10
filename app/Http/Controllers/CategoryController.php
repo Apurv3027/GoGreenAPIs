@@ -20,10 +20,12 @@ class CategoryController extends Controller
     {
         // Fetch all banners from the database
         $categories = Category::all();
+        $totalCategories = $categories->count();
 
         return response()->json(
             [
                 'status' => 'success',
+                'totalCategories' => $totalCategories,
                 'categories' => $categories,
             ],
             200,
