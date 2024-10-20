@@ -19,7 +19,7 @@ class AuthController extends Controller
 {
     public function registerUser(Request $request)
     {
-        try{
+        try {
             $validator = Validator::make($request->all(), [
                 'fullname' => 'required',
                 'email' => 'required|email|unique:users',
@@ -28,26 +28,34 @@ class AuthController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first(),
-                ], 302);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $validator->errors()->first(),
+                    ],
+                    302,
+                );
             }
 
             // $userData = User::create($request->toarray());
             $userData = User::addUser($request);
 
-            return response()->json([
-                'code' => 200,
-                'status' => 'success',
-                'message' => 'created successfully.',
-                'data' => $userData,
-            ], 200);
-
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 302);
+            return response()->json(
+                [
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'created successfully.',
+                    'data' => $userData,
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => $e->getMessage(),
+                ],
+                302,
+            );
         }
     }
 
@@ -60,41 +68,57 @@ class AuthController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first(),
-                ], 400);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $validator->errors()->first(),
+                    ],
+                    400,
+                );
             }
 
             // Attempt to log the user in
             $credentials = [
                 'email' => $request->input('email'),
-                'password' => $request->input('password')
+                'password' => $request->input('password'),
             ];
 
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                $token = $user->createToken('authToken')->accessToken;
+                $token = $user->createToken('authToken')->plainTextToken;
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Login successful',
-                    'data' => [
-                        'user' => $user,
-                        'token' => $token,
+                // Store the token in the remember_token field
+                $user->remember_token = $token;
+                $user->save();
+
+                return response()->json(
+                    [
+                        'status' => 'success',
+                        'message' => 'Login successful',
+                        'data' => [
+                            'user' => $user,
+                            'token' => $token,
+                        ],
                     ],
-                ], 200);
+                    200,
+                );
             } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Invalid login credentials',
-                ], 401);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Invalid login credentials',
+                    ],
+                    401,
+                );
             }
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 }

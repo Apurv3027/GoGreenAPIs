@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,10 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById']);
 // Users
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
+
+// User Address
+Route::post('/user/{id}/address', [AddressController::class, 'store']);
+Route::get('/user/{id}/addresses', [AddressController::class, 'show']);
 
 // Add to Cart
 Route::post('/cart/add', [CartController::class, 'addToCart']);

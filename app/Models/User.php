@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Helper\helper;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use App\Models\Address;
 
 class User extends Authenticatable
 {
@@ -20,22 +21,14 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'fullname',
-        'email',
-        'password',
-        'mobile_number',
-    ];
+    protected $fillable = ['fullname', 'email', 'password', 'mobile_number', 'street_1', 'street_2', 'city', 'state'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -57,5 +50,10 @@ class User extends Authenticatable
         $data->save();
 
         return $data->toArray();
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 }

@@ -29,9 +29,13 @@ return array(
     'goldText'=>"Gold",
 
     'admin' => [
-        'fullname'        => 'Admin',
+        'fullname'          => 'Admin',
         'email'             => 'admin@gmail.com',
         'password'          => 'Admin@12345',
         'mobile_number'     => '9723567600',
+        'street_1'          => 'Surat',
+        'street_2'          => 'Surat',
+        'city'              => 'Surat',
+        'state'             => 'Gujarat',
     ]
 );
