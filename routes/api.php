@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,3 +72,8 @@ Route::get('/user/{id}/addresses', [AddressController::class, 'show']);
 Route::post('/cart/add', [CartController::class, 'addToCart']);
 Route::get('/cart/{user_id}', [CartController::class, 'fetchCartByUserId']);
 Route::delete('/cart', [CartController::class, 'deleteFromCart']);
+
+// Orders
+Route::post('/orders', [OrdersController::class, 'store']);
+Route::get('/orders', [OrdersController::class, 'index']);
+Route::get('/orders/{userId}', [OrdersController::class, 'show']);
