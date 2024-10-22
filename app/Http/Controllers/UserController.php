@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-
     public function updateAddress(Request $request, $id)
     {
         try {
@@ -28,10 +27,13 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first(),
-                ], 400);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $validator->errors()->first(),
+                    ],
+                    400,
+                );
             }
 
             // Find the user by ID
@@ -39,10 +41,13 @@ class UserController extends Controller
 
             // Check if user exists
             if (!$user) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User not found',
-                ], 404);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'User not found',
+                    ],
+                    404,
+                );
             }
 
             // Update user's address
@@ -53,17 +58,22 @@ class UserController extends Controller
                 'state' => $request->input('state'),
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Address updated successfully',
-                'data' => $user,
-            ], 200);
-
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Address updated successfully',
+                    'data' => $user,
+                ],
+                200,
+            );
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => $th->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -140,9 +150,48 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'fullname' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255|unique:users,email,' . $id,
+            'mobile_number' => 'nullable|string|max:20',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
+
+        // Find the user by ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ],
+                404,
+            );
+        }
+
+        // Update user profile
+        $user->fullname = $request->input('fullname', $user->fullname);
+        $user->email = $request->input('email', $user->email);
+        $user->mobile_number = $request->input('mobile_number', $user->mobile_number);
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully.',
+            'data' => $user,
+        ], 200);
     }
 
     /**

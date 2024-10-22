@@ -47,19 +47,25 @@ class AddressController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first(),
-                ], 400);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $validator->errors()->first(),
+                    ],
+                    400,
+                );
             }
 
             $user = User::find($userId);
 
             if (!$user) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User not found',
-                ], 404);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'User not found',
+                    ],
+                    404,
+                );
             }
 
             // Create a new address record for the user
@@ -70,18 +76,23 @@ class AddressController extends Controller
                 'state' => $request->input('state'),
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Address added successfully',
-                'data' => $address,
-                'user' => $user,
-            ], 201);
-
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Address added successfully',
+                    'data' => $address,
+                    'user' => $user,
+                ],
+                201,
+            );
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => $th->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -94,23 +105,39 @@ class AddressController extends Controller
             $user = User::with('addresses')->find($userId);
 
             if (!$user) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User not found',
-                ], 404);
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'User not found',
+                    ],
+                    404,
+                );
             }
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'User addresses retrieved successfully',
-                'data' => $user,
-            ], 200);
-
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'User addresses retrieved successfully',
+                    'data' => [
+                        'id' => $user->id,
+                        'fullname' => $user->fullname,
+                        'email' => $user->email,
+                        'mobile_number' => $user->mobile_number,
+                        'created_at' => $user->created_at,
+                        'updated_at' => $user->updated_at,
+                        'addresses' => $user->addresses,
+                    ],
+                ],
+                200,
+            );
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => $th->getMessage(),
+                ],
+                500,
+            );
         }
     }
 

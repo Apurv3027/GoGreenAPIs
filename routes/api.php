@@ -60,6 +60,9 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById']);
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
 
+// Update User Profile
+Route::post('/users/{id}', [UserController::class, 'update']);
+
 // User Address
 Route::post('/user/{id}/address', [AddressController::class, 'store']);
 Route::get('/user/{id}/addresses', [AddressController::class, 'show']);
