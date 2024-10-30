@@ -21,18 +21,23 @@ class AdminSeeder extends Seeder
 
         // Truncate users table
         User::truncate();
+        DB::table('addresses')->truncate();
 
-        // Admin
-        User::create([
+        // Admin User
+        $admin = User::create([
             'fullname'          => config('const.admin.fullname'),
             'email'             => config('const.admin.email'),
             'email_verified_at' => Carbon::now(),
             'password'          => Hash::make(config('const.admin.password')),
             'mobile_number'     => config('const.admin.mobile_number'),
-            'street_1'          => config('const.admin.street_1'),
-            'street_2'          => config('const.admin.street_2'),
-            'city'              => config('const.admin.city'),
-            'state'             => config('const.admin.state'),
+        ]);
+
+        // Admin address
+        $admin->addresses()->create([
+            'street_1' => config('const.admin.street_1'),
+            'street_2' => config('const.admin.street_2'),
+            'city'     => config('const.admin.city'),
+            'state'    => config('const.admin.state'),
         ]);
 
         // Re-enable foreign key checks

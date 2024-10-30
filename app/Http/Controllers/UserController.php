@@ -83,7 +83,7 @@ class UserController extends Controller
     public function index()
     {
         // Fetch all users from the database
-        $users = User::where('email', '!=', 'admin@gmail.com')->get();
+        $users = User::with('addresses')->where('email', '!=', 'admin@gmail.com')->get();
         $totalUsers = $users->count();
 
         return response()->json(
@@ -187,11 +187,14 @@ class UserController extends Controller
         $user->mobile_number = $request->input('mobile_number', $user->mobile_number);
         $user->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Profile updated successfully.',
-            'data' => $user,
-        ], 200);
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Profile updated successfully.',
+                'data' => $user,
+            ],
+            200,
+        );
     }
 
     /**

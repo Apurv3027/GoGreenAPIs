@@ -116,12 +116,12 @@ class ProductController extends Controller
             $product->product_image_url = $request->product_image_url;
             $product->product_description = $request->product_description;
             $product->product_category = $category->category_name;
+            $product->category_id = $category->id;
 
             $product->save();
 
-            // Increment the category's item count
-            $category->category_item_count = $category->category_item_count + 1;
-            $category->save();
+            // Update the category's item count
+            $category->increment('category_item_count');
 
             return response()->json(
                 [
@@ -227,13 +227,23 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         // Find the product by ID
         $product = Product::find($id);
 
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        // Get the category associated with the product
+        $category = $product->category;
+
+        // Check if the category exists before attempting to decrement
+        if ($category) {
+            // Decrement the category's item count
+            $category->decrement('category_item_count');
+            $category->save();
         }
 
         // Delete the product
