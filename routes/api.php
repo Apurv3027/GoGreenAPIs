@@ -47,6 +47,7 @@ Route::post('/add-category', [CategoryController::class, 'store']); // Add Categ
 Route::get('/categories', [CategoryController::class, 'getAllCategories']); // Get All Category
 Route::post('/categories/{id}', [CategoryController::class, 'update']);   // Update Category
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']); // Delete Category
+Route::get('/categories/{categoryId}/products', [CategoryController::class, 'getProductsByCategory']); // Get Product Category Wise
 
 // Product
 Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);  // Upload Product Image

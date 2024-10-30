@@ -32,6 +32,34 @@ class CategoryController extends Controller
         );
     }
 
+    public function getProductsByCategory($categoryId)
+    {
+        $category = Category::with('products')->find($categoryId);
+
+        if (!$category) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Category not found',
+                ],
+                404,
+            );
+        }
+
+        $products = $category->products;
+        $totalProducts = $products->count();
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'category' => $category->category_name,
+                'totalProducts' => $totalProducts,
+                'products' => $products,
+            ],
+            200,
+        );
+    }
+
     public function uploadImage(Request $request)
     {
         if ($request->hasFile('image')) {
