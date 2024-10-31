@@ -77,4 +77,5 @@ Route::delete('/cart', [CartController::class, 'deleteFromCart']);
 // Orders
 Route::post('/orders', [OrdersController::class, 'store']);
 Route::get('/orders', [OrdersController::class, 'index']);
+Route::get('/orders/totalsales', [OrdersController::class, 'getTotalSales']);
 Route::get('/orders/{userId}', [OrdersController::class, 'show']);

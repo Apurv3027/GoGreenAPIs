@@ -19,12 +19,24 @@ use Illuminate\Support\Str;
 
 class OrdersController extends Controller
 {
+    public function getTotalSales()
+    {
+        $totalSales = Orders::sum('total_amount');
+        return response()->json(
+            [
+                'status' => 'success',
+                'total_sales' => $totalSales,
+            ],
+            200,
+        );
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $orders = Orders::with(['user', 'orderItems'])->get();
+        $orders = Orders::with(['user', 'address', 'orderItems'])->get();
         $totalOrders = $orders->count();
 
         return response()->json(
@@ -52,6 +64,7 @@ class OrdersController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'address_id' => 'required|exists:addresses,id',
             'order_id' => 'required|numeric',
             'total_amount' => 'required|numeric',
         ]);
@@ -71,6 +84,7 @@ class OrdersController extends Controller
         // Create the order
         $order = Orders::create([
             'user_id' => $request->user_id,
+            'address_id' => $request->address_id,
             'order_id' => $request->order_id,
             'total_amount' => $request->total_amount,
         ]);
@@ -112,7 +126,7 @@ class OrdersController extends Controller
             );
         }
 
-        $orders = Orders::with(['user', 'orderItems'])
+        $orders = Orders::with(['user', 'address', 'orderItems'])
             ->where('user_id', $userId)
             ->get();
 
