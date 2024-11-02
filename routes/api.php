@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,28 +36,27 @@ Route::post('/register', [AuthController::class, 'registerUser']);
 Route::post('/login', [AuthController::class, 'loginUser']);
 
 // Banners
-Route::post('/upload-banner-image', [BannerController::class, 'uploadImage']);  // Upload Banner Image
+Route::post('/upload-banner-image', [BannerController::class, 'uploadImage']); // Upload Banner Image
 Route::post('/add-banner', [BannerController::class, 'store']); // Add Banner
 Route::get('/banners', [BannerController::class, 'getAllBanners']); // Get All Banners
-Route::post('/banners/{id}', [BannerController::class, 'update']);   // Update Banner
+Route::post('/banners/{id}', [BannerController::class, 'update']); // Update Banner
 Route::delete('/banners/{id}', [BannerController::class, 'destroy']); // Delete Banner
 
 // Category
-Route::post('/upload-category-image', [CategoryController::class, 'uploadImage']);  // Upload Category Image
+Route::post('/upload-category-image', [CategoryController::class, 'uploadImage']); // Upload Category Image
 Route::post('/add-category', [CategoryController::class, 'store']); // Add Category
 Route::get('/categories', [CategoryController::class, 'getAllCategories']); // Get All Category
-Route::post('/categories/{id}', [CategoryController::class, 'update']);   // Update Category
+Route::post('/categories/{id}', [CategoryController::class, 'update']); // Update Category
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']); // Delete Category
 Route::get('/categories/{categoryId}/products', [CategoryController::class, 'getProductsByCategory']); // Get Product Category Wise
 
 // Product
-Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);  // Upload Product Image
+Route::post('/upload-product-image', [ProductController::class, 'uploadImage']); // Upload Product Image
 Route::post('/add-product', [ProductController::class, 'store']); // Add Product
 Route::get('/products', [ProductController::class, 'getAllProducts']); // Get All Product
-Route::post('/products/{id}', [ProductController::class, 'update']);   // Update Product
+Route::post('/products/{id}', [ProductController::class, 'update']); // Update Product
 Route::delete('/products/{id}', [ProductController::class, 'destroy']); // Delete Product
 Route::get('/products/{id}', [ProductController::class, 'getProductById']);
-
 
 // Users
 Route::get('/users', [UserController::class, 'index']);
@@ -79,3 +79,8 @@ Route::post('/orders', [OrdersController::class, 'store']);
 Route::get('/orders', [OrdersController::class, 'index']);
 Route::get('/orders/totalsales', [OrdersController::class, 'getTotalSales']);
 Route::get('/orders/{userId}', [OrdersController::class, 'show']);
+
+// Wishlist
+Route::post('/wishlist/add/{user_id}', [WishlistController::class, 'addToWishlist']);
+Route::post('/wishlist/remove/{user_id}', [WishlistController::class, 'removeFromWishlist']);
+Route::get('/wishlist/view/{user_id}', [WishlistController::class, 'viewWishlist']);

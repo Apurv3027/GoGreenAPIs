@@ -11,6 +11,7 @@ use App\Helper\helper;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\Address;
+use App\Models\Product;
 
 class User extends Authenticatable
 {
@@ -55,5 +56,9 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function wishlistItems() {
+        return $this->belongsToMany(Product::class, 'wishlists');
     }
 }
