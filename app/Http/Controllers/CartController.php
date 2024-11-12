@@ -30,6 +30,18 @@ class CartController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+        // Fetch the product to check its stock
+        $product = Product::find($request->product_id);
+
+        if ($product->product_quantity < $request->quantity) {
+            return response()->json(
+                [
+                    'error' => 'Insufficient stock for this product',
+                ],
+                400,
+            );
+        }
+
         $cartItem = Cart::where('user_id', $request->user_id)
             ->where('product_id', $request->product_id)
             ->first();
@@ -44,6 +56,9 @@ class CartController extends Controller
                 'quantity' => $request->quantity,
             ]);
         }
+
+        // Decrement the product quantity in the products table
+        $product->decrement('product_quantity', $request->quantity);
 
         return response()->json(['message' => 'Product added to cart successfully'], 200);
     }
@@ -64,6 +79,12 @@ class CartController extends Controller
             ->first();
 
         if ($cartItem) {
+            // Get the product and restore the quantity
+            $product = Product::find($request->product_id);
+
+            // Add back the product quantity to the products table
+            $product->increment('product_quantity', $cartItem->quantity);
+
             $cartItem->delete();
             return response()->json(['message' => 'Product removed from cart successfully'], 200);
         } else {

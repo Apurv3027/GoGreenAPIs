@@ -67,6 +67,8 @@ class OrdersController extends Controller
             'address_id' => 'required|exists:addresses,id',
             'order_id' => 'required|numeric',
             'total_amount' => 'required|numeric',
+            'payment_type' => 'required|in:Online Payment,Cash on Delivery',
+            'payment_id' => 'required',
         ]);
 
         $cartItems = Cart::where('user_id', $request->user_id)->get();
@@ -87,6 +89,8 @@ class OrdersController extends Controller
             'address_id' => $request->address_id,
             'order_id' => $request->order_id,
             'total_amount' => $request->total_amount,
+            'payment_type' => $request->payment_type,
+            'payment_id' => $request->payment_id,
         ]);
 
         foreach ($cartItems as $item) {
@@ -98,6 +102,11 @@ class OrdersController extends Controller
         }
 
         Cart::where('user_id', $request->user_id)->delete();
+
+        // Remove selected address from user's table after order is placed
+        $user = User::find($request->user_id);
+        $user->selected_address_id = null;
+        $user->save();
 
         return response()->json(
             [

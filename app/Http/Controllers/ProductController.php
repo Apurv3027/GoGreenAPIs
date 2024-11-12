@@ -104,6 +104,7 @@ class ProductController extends Controller
             'product_price' => 'required|numeric',
             'product_image_url' => 'required|string',
             'product_description' => 'required|string',
+            'product_quantity' => 'required|integer|min:0',
             'product_category' => 'required|string',
         ]);
 
@@ -115,6 +116,7 @@ class ProductController extends Controller
             $product->product_price = $request->product_price;
             $product->product_image_url = $request->product_image_url;
             $product->product_description = $request->product_description;
+            $product->product_quantity = $request->product_quantity;
             $product->product_category = $category->category_name;
             $product->category_id = $category->id;
 
@@ -169,6 +171,7 @@ class ProductController extends Controller
             'product_price' => 'sometimes|string',
             'product_image_url' => 'sometimes|string',
             'product_description' => 'sometimes|string',
+            'product_quantity' => 'sometimes|required|integer|min:0',
             'product_category' => 'sometimes|string',
         ]);
 
@@ -200,6 +203,11 @@ class ProductController extends Controller
         // Update fields if provided
         if ($request->has('product_description')) {
             $product->product_description = $request->input('product_description');
+        }
+
+        // Update fields if provided
+        if ($request->has('product_quantity')) {
+            $product->product_quantity = $request->input('product_quantity');
         }
 
         // Check if the category exists in the Categories table

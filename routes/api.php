@@ -68,6 +68,9 @@ Route::post('/users/{id}', [UserController::class, 'update']);
 // User Address
 Route::post('/user/{id}/address', [AddressController::class, 'store']);
 Route::get('/user/{id}/addresses', [AddressController::class, 'show']);
+Route::get('/user/{id}/get-selected-address', [AddressController::class, 'getSelectedAddress']);
+Route::post('/user/{id}/select-address', [AddressController::class, 'selectAddress']);
+Route::post('/user/{id}/deselect-address', [AddressController::class, 'deselectAddress']);
 
 // Add to Cart
 Route::post('/cart/add', [CartController::class, 'addToCart']);
@@ -75,7 +78,7 @@ Route::get('/cart/{user_id}', [CartController::class, 'fetchCartByUserId']);
 Route::delete('/cart', [CartController::class, 'deleteFromCart']);
 
 // Orders
-Route::post('/orders', [OrdersController::class, 'store']);
+Route::post('/create-orders', [OrdersController::class, 'store']);
 Route::get('/orders', [OrdersController::class, 'index']);
 Route::get('/orders/totalsales', [OrdersController::class, 'getTotalSales']);
 Route::get('/orders/{userId}', [OrdersController::class, 'show']);

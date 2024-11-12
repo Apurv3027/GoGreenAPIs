@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_price');
             $table->string('product_image_url');
-            $table->string('product_description');
+            $table->text('product_description');
+            $table->integer('product_quantity');
             $table->string('product_category');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

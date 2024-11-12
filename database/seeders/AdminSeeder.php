@@ -33,11 +33,15 @@ class AdminSeeder extends Seeder
         ]);
 
         // Admin address
-        $admin->addresses()->create([
+        $adminAddress = $admin->addresses()->create([
             'street_1' => config('const.admin.street_1'),
             'street_2' => config('const.admin.street_2'),
             'city'     => config('const.admin.city'),
             'state'    => config('const.admin.state'),
+        ]);
+
+        $admin->update([
+            'selected_address_id' => $adminAddress->id,
         ]);
 
         // Re-enable foreign key checks

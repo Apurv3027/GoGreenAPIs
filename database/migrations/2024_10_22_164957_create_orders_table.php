@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('address_id')->nullable();
             $table->string('order_id')->unique();
             $table->decimal('total_amount', 10, 2);
+            $table->string('payment_type');
+            $table->string('payment_id')->unique();
             $table->timestamps();
 
             // Foreign key constraint

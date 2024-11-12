@@ -17,6 +17,118 @@ use Illuminate\Support\Str;
 
 class AddressController extends Controller
 {
+    public function getSelectedAddress($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found',
+                ],
+                404,
+            );
+        }
+
+        $address = Address::find($user->selected_address_id);
+
+        if (!$address) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'No address selected',
+                ],
+                404,
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'user' => [
+                'fullname' => $user->fullname,
+                'mobile_number' => $user->mobile_number,
+            ],
+            'address' => $address,
+        ]);
+    }
+
+    public function selectAddress(Request $request, $userId)
+    {
+        $request->validate([
+            'address_id' => 'required|exists:addresses,id',
+        ]);
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found',
+                ],
+                404,
+            );
+        }
+
+        // Check if the address belongs to the user
+        $address = Address::where('id', $request->address_id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$address) {
+            return response()->json(['error' => 'Invalid address selection'], 403);
+        }
+
+        // Update the selected address in the user record
+        $user->selected_address_id = $request->address_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address selected successfully',
+            'selected_address_id' => $user->selected_address_id,
+        ]);
+    }
+
+    public function deselectAddress(Request $request, $userId)
+    {
+        $request->validate([
+            'address_id' => 'required|exists:addresses,id',
+        ]);
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found',
+                ],
+                404,
+            );
+        }
+
+        // Check if the address belongs to the user
+        $address = Address::where('id', $request->address_id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$address) {
+            return response()->json(['error' => 'Invalid address selection'], 403);
+        }
+
+        // Deselect the address (set to null)
+        $user->selected_address_id = null;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address deselected successfully',
+            'selected_address_id' => $user->selected_address_id,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
