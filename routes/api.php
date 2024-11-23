@@ -79,9 +79,14 @@ Route::delete('/cart', [CartController::class, 'deleteFromCart']);
 
 // Orders
 Route::post('/create-orders', [OrdersController::class, 'store']);
+Route::post('/orders/{orderId}', [OrdersController::class, 'update']);
 Route::get('/orders', [OrdersController::class, 'index']);
 Route::get('/orders/totalsales', [OrdersController::class, 'getTotalSales']);
 Route::get('/orders/{userId}', [OrdersController::class, 'show']);
+Route::get('/orders/delivered/{userId}', [OrdersController::class, 'showDeliveredOrders']);
+Route::get('/orders/processing/{userId}', [OrdersController::class, 'showProcessingOrders']);
+Route::get('/orders/returned/{userId}', [OrdersController::class, 'showReturnedOrders']);
+Route::get('/orders/canceled/{userId}', [OrdersController::class, 'showCanceledOrders']);
 
 // Wishlist
 Route::post('/wishlist/add/{user_id}', [WishlistController::class, 'addToWishlist']);

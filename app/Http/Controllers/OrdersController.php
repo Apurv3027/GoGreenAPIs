@@ -69,6 +69,7 @@ class OrdersController extends Controller
             'total_amount' => 'required|numeric',
             'payment_type' => 'required|in:Online Payment,Cash on Delivery',
             'payment_id' => 'required',
+            'order_status' => 'nullable|in:Processing,Delivered,Canceled,Returned',
         ]);
 
         $cartItems = Cart::where('user_id', $request->user_id)->get();
@@ -91,6 +92,7 @@ class OrdersController extends Controller
             'total_amount' => $request->total_amount,
             'payment_type' => $request->payment_type,
             'payment_id' => $request->payment_id,
+            'order_status' => $request->order_status ?? 'Processing',
         ]);
 
         foreach ($cartItems as $item) {
@@ -149,10 +151,218 @@ class OrdersController extends Controller
             );
         }
 
+        // Count orders by status
+        $orderStatusCounts = $orders->groupBy('order_status')->map(function ($group) {
+            return $group->count();
+        });
+
         return response()->json(
             [
                 'status' => 'success',
-                'data' => $orders,
+                'data' => [
+                    'orders' => $orders,
+                    'order_status_counts' => $orderStatusCounts,
+                ],
+            ],
+            200,
+        );
+    }
+
+    public function showDeliveredOrders(Request $request, $userId)
+    {
+        // Find the user by ID
+        $user = User::find($userId);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ],
+                404,
+            );
+        }
+
+        $orders = Orders::with(['user', 'address', 'orderItems'])
+            ->where('user_id', $userId)
+            ->where('order_status', 'Delivered')
+            ->get();
+
+        // Check if there are no orders with 'Delivered' status
+        if ($orders->isEmpty()) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'No delivered orders found for this user.',
+                ],
+                404,
+            );
+        }
+
+        // Count orders by status (if needed, you can also count only delivered orders here)
+        $orderStatusCounts = $orders->groupBy('order_status')->map(function ($group) {
+            return $group->count();
+        });
+
+        // Return the response
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => [
+                    'orders' => $orders,
+                    'order_status_counts' => $orderStatusCounts,
+                ],
+            ],
+            200,
+        );
+    }
+
+    public function showProcessingOrders(Request $request, $userId)
+    {
+        // Find the user by ID
+        $user = User::find($userId);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ],
+                404,
+            );
+        }
+
+        $orders = Orders::with(['user', 'address', 'orderItems'])
+            ->where('user_id', $userId)
+            ->where('order_status', 'Processing')
+            ->get();
+
+        // Check if there are no orders with 'Processing' status
+        if ($orders->isEmpty()) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'No processing orders found for this user.',
+                ],
+                404,
+            );
+        }
+
+        // Count orders by status (if needed, you can also count only delivered orders here)
+        $orderStatusCounts = $orders->groupBy('order_status')->map(function ($group) {
+            return $group->count();
+        });
+
+        // Return the response
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => [
+                    'orders' => $orders,
+                    'order_status_counts' => $orderStatusCounts,
+                ],
+            ],
+            200,
+        );
+    }
+
+    public function showReturnedOrders(Request $request, $userId)
+    {
+        // Find the user by ID
+        $user = User::find($userId);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ],
+                404,
+            );
+        }
+
+        $orders = Orders::with(['user', 'address', 'orderItems'])
+            ->where('user_id', $userId)
+            ->where('order_status', 'Returned')
+            ->get();
+
+        // Check if there are no orders with 'Returned' status
+        if ($orders->isEmpty()) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'No returned orders found for this user.',
+                ],
+                404,
+            );
+        }
+
+        // Count orders by status (if needed, you can also count only delivered orders here)
+        $orderStatusCounts = $orders->groupBy('order_status')->map(function ($group) {
+            return $group->count();
+        });
+
+        // Return the response
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => [
+                    'orders' => $orders,
+                    'order_status_counts' => $orderStatusCounts,
+                ],
+            ],
+            200,
+        );
+    }
+
+    public function showCanceledOrders(Request $request, $userId)
+    {
+        // Find the user by ID
+        $user = User::find($userId);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'User not found.',
+                ],
+                404,
+            );
+        }
+
+        $orders = Orders::with(['user', 'address', 'orderItems'])
+            ->where('user_id', $userId)
+            ->where('order_status', 'Canceled')
+            ->get();
+
+        // Check if there are no orders with 'Canceled' status
+        if ($orders->isEmpty()) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'No canceled orders found for this user.',
+                ],
+                404,
+            );
+        }
+
+        // Count orders by status (if needed, you can also count only delivered orders here)
+        $orderStatusCounts = $orders->groupBy('order_status')->map(function ($group) {
+            return $group->count();
+        });
+
+        // Return the response
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => [
+                    'orders' => $orders,
+                    'order_status_counts' => $orderStatusCounts,
+                ],
             ],
             200,
         );
@@ -169,9 +379,38 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Orders $orders)
+    public function update(Request $request, $orderId)
     {
-        //
+        $request->validate([
+            'order_status' => 'required|in:Processing,Delivered,Canceled,Returned',
+        ]);
+
+        // Find the order by ID
+        $order = Orders::where('order_id', $orderId)->first();
+
+        // Check if the order exists
+        if (!$order) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Order not found.',
+                ],
+                404,
+            );
+        }
+
+        // Update the order status
+        $order->order_status = $request->order_status;
+        $order->save();
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Order status updated successfully.',
+                'data' => $order,
+            ],
+            200,
+        );
     }
 
     /**

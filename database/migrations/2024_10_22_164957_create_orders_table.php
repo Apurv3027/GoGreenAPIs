@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->decimal('total_amount', 10, 2);
             $table->string('payment_type');
             $table->string('payment_id')->unique();
+            $table->enum('order_status', ['Processing', 'Delivered', 'Canceled', 'Returned'])->default('Processing');
             $table->timestamps();
 
             // Foreign key constraint
